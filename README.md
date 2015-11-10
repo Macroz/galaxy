@@ -1,7 +1,7 @@
 # galaxy
 ======
 
-[Random galaxy visualization](galaxy.html?raw=true).
+[Random galaxy visualization](http://macroz.github.io/galaxy/).
 
 ![Galaxy](galaxy.png?raw=true)
 
