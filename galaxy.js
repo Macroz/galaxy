@@ -17,11 +17,12 @@ function init() {
   
   geometry = new THREE.Geometry();
   var clouds = 2000;
+  var stars = 4000;
 
-  var vertices = new Float32Array(clouds * 3);
-  var colors = new Float32Array(clouds * 3);
-  var alphas = new Float32Array(clouds * 1);
-  var sizes = new Float32Array(clouds * 1);
+  var vertices = new Float32Array((clouds + stars) * 3);
+  var colors = new Float32Array((clouds + stars) * 3);
+  var alphas = new Float32Array((clouds + stars) * 1);
+  var sizes = new Float32Array((clouds + stars) * 1);
 
   var variance = 2.0 * (Math.random() + Math.random() + Math.random()) / 3.0;
   var arms = Math.floor(Math.random() * 4) + 3;
@@ -57,6 +58,36 @@ function init() {
     sizes[i] = s;
   }
   
+  for (i = clouds; i < clouds + stars; ++i) {
+    var f = (clouds + stars - i) / (clouds + stars);
+    var g = i / (clouds + stars);
+    //var a = Math.random() * 3.14159 * 2.0;
+    // var r = f * 700;
+    var x = Math.random() * 5000.0 - 2500.0;
+    var y = Math.random() * 5000.0 - 2500.0;
+    var z = Math.random() * 5000.0 - 2500.0;
+    if (f < 0.2) {
+      var a = Math.random() * 3.14159 * 2.0;
+      var r = 0.3 + Math.pow(f, 1.5) / Math.pow(0.2, 1.5) * 700;
+      var x = Math.cos(a) * r;
+      var y = Math.sin(a) * r;
+      var z = Math.random() * g * g * Math.sqrt(r) - 0.5 * Math.sqrt(r);
+    }
+
+    vertices[i * 3 + 0] = x;
+    vertices[i * 3 + 1] = y;
+    vertices[i * 3 + 2] = z;
+
+    var c = Math.pow(f, 0.8);
+    colors[i * 3 + 0] = 1.0;
+    colors[i * 3 + 1] = 1.0;
+    colors[i * 3 + 2] = 1.0;
+
+    var s = Math.pow(512.0, Math.pow(f * Math.random(), 0.3));
+    alphas[i] = 0.2 + Math.random() * 0.8;
+    sizes[i] = Math.random() * Math.random() * 8.0;
+  }
+
   var bufferGeometry = new THREE.BufferGeometry();
   bufferGeometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
   bufferGeometry.addAttribute('color', new THREE.BufferAttribute(colors, 3));
