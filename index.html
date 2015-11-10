@@ -19,6 +19,30 @@
       text-decoration: none;
       }
 
+      a:hover, #fork a:hover {
+      background-color: #777;
+      }
+
+      #fork a {
+      box-shadow: 0px 0px 8px #444;
+      }
+
+      div#fork {
+      position: absolute;
+      top: 25px;
+      right: -90px;
+      z-index: 10;
+      }
+
+      #fork a {
+      display: inline-block;
+      -ms-transform: rotate(30deg);
+      -webkit-transform: rotate(30deg);
+      transform: rotate(30deg);
+      padding: 5px 100px;
+      background-color:  #333;
+      }
+
       strong {
       font-weight: bold;
       font-size: 150%;
@@ -28,7 +52,8 @@
       #author {
       color: #fff;
       position: absolute;
-      top: 0px; width: 100%;
+      top: 0;
+      width: 100%;
       padding: 20px;
       z-index: 10;
       }
@@ -67,5 +92,11 @@
 
     <script src="galaxy.js"></script>
     <div id="author"><strong>Galaxy</Strong><br>by Markku Rontu<br><a href="http://threejs.org">with Three.js</a></div>
+
+    <div id="fork">
+      <a href="https://github.com/Macroz/galaxy">
+        Fork me on Github
+      </a>
+    </div>
   </body>
 </html>
