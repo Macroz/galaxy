@@ -53,7 +53,7 @@ function init() {
     colors[i * 3 + 2] = c * b1 + (1.0 - c) * b2;
 
     var s = Math.pow(512.0, Math.pow(f * Math.random(), 0.3));
-    alphas[i] = Math.random() * (500.0 - s) / 5000.0 * Math.pow(g, 0.49);
+    alphas[i] = Math.random() * (400.0 - s) / 5000.0 * Math.pow(g, 0.49);
     sizes[i] = s;
   }
   
