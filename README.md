@@ -3,6 +3,8 @@
 
 [Random galaxy visualization](galaxy.html?raw=true).
 
+![Galaxy](galaxy.png?raw=true)
+
 License
 -------
 
