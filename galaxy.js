@@ -11,15 +11,15 @@ animate();
 function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
-  
+
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
   scene = new THREE.Scene();
-  
+
   geometry = new THREE.Geometry();
 
   var variance = 2.0 * (Math.random() + Math.random() + Math.random()) / 3.0;
   var arms = Math.floor(Math.random() * 4) + 3;
-  
+
   var clouds = 500 * arms;
   var stars = 4000;
 
@@ -58,7 +58,7 @@ function init() {
     alphas[i] = Math.random() * (400.0 - s) / 5000.0 * Math.pow(g, 0.49);
     sizes[i] = s;
   }
-  
+
   for (i = clouds; i < clouds + stars; ++i) {
     var f = (clouds + stars - i) / (clouds + stars);
     var g = i / (clouds + stars);
@@ -98,7 +98,7 @@ function init() {
   uniforms = {
     texture: { type: "t", value: THREE.ImageUtils.loadTexture("sphere.png") }
   };
-  
+
   var shaderMaterial = new THREE.ShaderMaterial({
     uniforms:       uniforms,
     vertexShader:   document.getElementById('vertexshader').textContent,
@@ -110,20 +110,20 @@ function init() {
 
   particles = new THREE.Points(bufferGeometry, shaderMaterial);
   scene.add(particles);
-  
+
   renderer = new THREE.WebGLRenderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   container.appendChild(renderer.domElement);
-  
+
   document.addEventListener('mousemove', onDocumentMouseMove, false);
   document.addEventListener('touchstart', onDocumentTouchStart, false);
   document.addEventListener('touchmove', onDocumentTouchMove, false);
-  
+
   window.addEventListener('resize', onWindowResize, false);
 }
 
-function onDocumentMouseMove(event) {  
+function onDocumentMouseMove(event) {
   mouseX = event.clientX - windowHalfX;
   mouseY = event.clientY - windowHalfY;
 }
@@ -147,16 +147,16 @@ function onDocumentTouchMove(event) {
 function onWindowResize(event) {
   windowHalfX = window.innerWidth / 2;
   windowHalfY = window.innerHeight / 2;
-  
+
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  
+
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function animate() {
-  requestAnimationFrame(animate);  
-  
+  requestAnimationFrame(animate);
+
   var a = 2 * mouseX / windowHalfX;
   var b = 2 * mouseY / windowHalfY;
   var x = 0.0;
@@ -170,7 +170,7 @@ function animate() {
   camera.rotation.order = 'XYZ';
   camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), a / 10.0);
   camera.up = new THREE.Vector3(0, 0, 1);
-  
+
   render();
 }
 
