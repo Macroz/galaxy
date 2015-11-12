@@ -19,6 +19,7 @@ function init() {
 
   var variance = 2.5 * (Math.random() + Math.random() + Math.random()) / 3.0;
   var arms = Math.floor(Math.random() * 4) + 3;
+  var twist = 0.6 + (Math.random() + Math.random() + Math.random() + Math.random() + Math.random());
 
   var clouds = 500 * arms;
   var stars = 4000;
@@ -39,8 +40,8 @@ function init() {
   for (i = 0; i < clouds; ++i) {
     var f = (clouds - i) / clouds;
     var g = i / clouds;
-    var a = (i % arms) / arms * 2.0 * 3.19149 + g * 3.0 + variance * ((Math.random() + Math.random() + Math.random()) * 0.4 / 3.0 - 0.2);
     var r = g * 700;
+    var a = (i % arms) / arms * 2.0 * 3.19149 + g * twist + variance * ((Math.random() + Math.random() + Math.random()) * 0.4 / 3.0 - 0.2);
     var x = Math.cos(a) * r;
     var y = Math.sin(a) * r;
     var z = 0.0;
