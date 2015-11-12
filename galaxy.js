@@ -20,7 +20,7 @@ function init() {
   var variance = 2.5 * (Math.random() + Math.random() + Math.random()) / 3.0;
   var arms = Math.floor(Math.random() * 4) + 3;
   var twist = 0.6 + (Math.random() + Math.random() + Math.random() + Math.random() + Math.random());
-  var pinch = 0.7 + 1.2 * (Math.random() + Math.random() + Math.random() + Math.random()) / 4.0;
+  var pinch = 0.7 + 1.5 * (Math.random() + Math.random() + Math.random() + Math.random()) / 4.0;
 
   var clouds = 500 * arms;
   var stars = 4000;
