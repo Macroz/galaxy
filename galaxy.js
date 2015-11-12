@@ -16,7 +16,11 @@ function init() {
   scene = new THREE.Scene();
   
   geometry = new THREE.Geometry();
-  var clouds = 2000;
+
+  var variance = 2.0 * (Math.random() + Math.random() + Math.random()) / 3.0;
+  var arms = Math.floor(Math.random() * 4) + 3;
+  
+  var clouds = 500 * arms;
   var stars = 4000;
 
   var vertices = new Float32Array((clouds + stars) * 3);
@@ -24,9 +28,6 @@ function init() {
   var alphas = new Float32Array((clouds + stars) * 1);
   var sizes = new Float32Array((clouds + stars) * 1);
 
-  var variance = 2.0 * (Math.random() + Math.random() + Math.random()) / 3.0;
-  var arms = Math.floor(Math.random() * 4) + 3;
-  
   var r1 = 1.0;
   var g1 = 1.0;
   var b1 = 0.8;
