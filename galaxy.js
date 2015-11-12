@@ -17,7 +17,7 @@ function init() {
 
   geometry = new THREE.Geometry();
 
-  var variance = 2.0 * (Math.random() + Math.random() + Math.random()) / 3.0;
+  var variance = 2.5 * (Math.random() + Math.random() + Math.random()) / 3.0;
   var arms = Math.floor(Math.random() * 4) + 3;
 
   var clouds = 500 * arms;
