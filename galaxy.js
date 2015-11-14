@@ -162,8 +162,8 @@ function animate() {
   var a = 2 * mouseX / windowHalfX;
   var b = 2 * mouseY / windowHalfY;
   var x = 0.0;
-  var y = 1000;
-  var z = 1000 + 1000 * b;
+  var y = 600;
+  var z = 800 + 1000 * b;
   camera.position.x = x * Math.cos(a) - y * Math.sin(a);
   camera.position.y = - x * Math.sin(a) + y * Math.cos(a);
   camera.position.z = z;
