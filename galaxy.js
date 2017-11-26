@@ -1,6 +1,8 @@
 var container;
-var camera, scene, renderer, particles, geometry, material, i, h, color;
+var camera, scene, renderer, particles, geometry, shaderMaterial, i, h, color;
 var mouseX = 0, mouseY = 0;
+var count = 0;
+var canSwitch = false;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -9,16 +11,47 @@ init();
 animate();
 
 function init() {
+  THREE.ImageUtils.crossOrigin = '';
   container = document.createElement('div');
+  container.id = 'fullscreen';
   document.body.appendChild(container);
 
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
   scene = new THREE.Scene();
 
+  clock = new THREE.Clock();
+  clock.start();
+
+  uniforms = {
+    texture: { type: "t", value: THREE.ImageUtils.loadTexture("sphere.png") }
+  };
+
+  shaderMaterial = new THREE.ShaderMaterial({
+    uniforms:       uniforms,
+    vertexShader:   document.getElementById('vertexshader').textContent,
+    fragmentShader: document.getElementById('fragmentshader').textContent,
+    transparent:    true,
+    depthTest:      false,
+    blending:       THREE.AdditiveBlending
+  });
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  container.appendChild(renderer.domElement);
+
+  document.addEventListener('mousedown', onDocumentMouseDown, false);
+  document.addEventListener('mousemove', onDocumentMouseMove, false);
+  document.addEventListener('touchstart', onDocumentTouchStart, false);
+  document.addEventListener('touchmove', onDocumentTouchMove, false);
+  window.addEventListener('resize', onWindowResize, false);
+}
+
+function createGeometry() {
   geometry = new THREE.Geometry();
 
   var variance = 2.5 * (Math.random() + Math.random() + Math.random()) / 3.0;
-  var arms = Math.floor(Math.random() * 4) + 3;
+  var arms = count === 0 ? 7 : Math.floor(Math.random() * 4) + 3;
   var twist = 0.6 + 1.5 * (Math.random() + Math.random() + Math.random() + Math.random() + Math.random());
   var pinch = 0.7 + 1.5 * (Math.random() + Math.random() + Math.random() + Math.random()) / 4.0;
 
@@ -97,32 +130,16 @@ function init() {
   bufferGeometry.addAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
   bufferGeometry.addAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
-  uniforms = {
-    texture: { type: "t", value: THREE.ImageUtils.loadTexture("sphere.png") }
-  };
-
-  var shaderMaterial = new THREE.ShaderMaterial({
-    uniforms:       uniforms,
-    vertexShader:   document.getElementById('vertexshader').textContent,
-    fragmentShader: document.getElementById('fragmentshader').textContent,
-    transparent:    true,
-    depthTest:      false,
-    blending:       THREE.AdditiveBlending
-  });
-
   particles = new THREE.Points(bufferGeometry, shaderMaterial);
   scene.add(particles);
+}
 
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  container.appendChild(renderer.domElement);
-
-  document.addEventListener('mousemove', onDocumentMouseMove, false);
-  document.addEventListener('touchstart', onDocumentTouchStart, false);
-  document.addEventListener('touchmove', onDocumentTouchMove, false);
-
-  window.addEventListener('resize', onWindowResize, false);
+function onDocumentMouseDown(event) {
+  var target = document.getElementById('fullscreen');
+  var requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen;
+  if (event.button === 2) {
+    requestFullscreen.call(target);
+  }
 }
 
 function onDocumentMouseMove(event) {
@@ -130,11 +147,22 @@ function onDocumentMouseMove(event) {
   mouseY = event.clientY - windowHalfY;
 }
 
+function goFullscreen(event) {
+  var target = document.getElementById('fullscreen');
+  var requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen;
+  requestFullscreen.call(target);
+  if (event) event.preventDefault();
+}
+
 function onDocumentTouchStart(event) {
-  if (event.touches.length === 1) {
+  var target = document.getElementById('fullscreen');
+  var requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen;
+  if (event.touches.length == 2) {
+    requestFullscreen.call(target);
+  } else if (event.touches.length === 1) {
     event.preventDefault();
-    mouseX = event.touches[ 0 ].pageX - windowHalfX;
-    mouseY = event.touches[ 0 ].pageY - windowHalfY;
+    mouseX = event.touches[0].pageX - windowHalfX;
+    mouseY = event.touches[0].pageY - windowHalfY;
   }
 }
 
@@ -159,18 +187,31 @@ function onWindowResize(event) {
 function animate() {
   requestAnimationFrame(animate);
 
-  var a = 2 * mouseX / windowHalfX;
-  var b = 2 * mouseY / windowHalfY;
+  var t = clock.getElapsedTime();
+
+  var a = (t * 0.1) % (Math.PI * 2.0);//2 * mouseX / windowHalfX;
+  var b = Math.cos(t * 0.17);//2 * mouseY / windowHalfY;
   var x = 0.0;
   var y = 600;
-  var z = 800 + 1000 * b;
+  var z = 1000 + 1200 * b;
+  if (z >= 2190) {
+    canSwitch = true;
+  } else if (canSwitch && z <= 2190) {
+    canSwitch = false;
+    if (particles) {
+      scene.remove(particles);
+      particles = null;
+    }
+    createGeometry();
+    ++count;
+  }
   camera.position.x = x * Math.cos(a) - y * Math.sin(a);
   camera.position.y = - x * Math.sin(a) + y * Math.cos(a);
   camera.position.z = z;
 
   camera.lookAt(scene.position);
-  camera.rotation.order = 'XYZ';
-  camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), a / 10.0);
+  //camera.rotation.order = 'XYZ';
+  //camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), a / 10.0);
   camera.up = new THREE.Vector3(0, 0, 1);
 
   render();
@@ -179,3 +220,15 @@ function animate() {
 function render() {
   renderer.render(scene, camera);
 }
+
+function initFullscreen() {
+  var gofull = document.getElementById('gofull');
+  if (gofull) {
+    gofull.addEventListener('mousedown', goFullscreen);
+    gofull.addEventListener('touchstart', goFullscreen);
+  } else {
+    setTimeout(initFullscreen, 500);
+  }
+}
+
+initFullscreen();
