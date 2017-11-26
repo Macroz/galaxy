@@ -23,7 +23,8 @@ function init() {
   clock.start();
 
   uniforms = {
-    texture: { type: "t", value: THREE.ImageUtils.loadTexture("sphere.png") }
+    texture: { type: "t", value: THREE.ImageUtils.loadTexture("sphere.png") },
+    uCameraPos: { type: "3f", value: new THREE.Vector3(0, 0, 1000) },
   };
 
   shaderMaterial = new THREE.ShaderMaterial({
@@ -218,6 +219,7 @@ function animate() {
 }
 
 function render() {
+  shaderMaterial.uniforms.uCameraPos.value = camera.position;
   renderer.render(scene, camera);
 }
 

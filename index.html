@@ -77,25 +77,24 @@
   <body>
     <script src="three.min.js"></script>
     <script type="x-shader/x-vertex" id="vertexshader">
+      uniform vec3 uCameraPos;
       attribute float alpha;
       attribute float size;
       attribute vec3 color;
       varying float vAlpha;
-      varying float vSize;
       varying vec3 vColor;
       void main() {
-      vAlpha = alpha;
-      vSize = size;
-      vColor = color;
+      float d = distance(position.xyz, uCameraPos);
       vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-      gl_PointSize = vSize;
+      vAlpha = alpha;
+      vColor = color;
+      gl_PointSize = size;
       gl_Position = projectionMatrix * mvPosition;
       }
     </script>
 
     <script type="x-shader/x-fragment" id="fragmentshader">
       varying vec3 vColor;
-      //uniform vec3 color;
       uniform sampler2D texture;
       varying float vAlpha;
       void main() {
